@@ -21,6 +21,16 @@ public class TransportController {
     @Autowired
     private PassengerService passengerService;
 
+    @GetMapping("/")
+    public String apiOverview(){
+        return "Available End Points:\n" +
+                "\\getAllBus\n" +
+                "\\getAllPassenger\n" +
+                "\\getPassengerById\n" +
+                "\\addBus\n" +
+                "\\addPassenger";
+    }
+
     @GetMapping("/getAllBus")
     public List<Bus> getAllBus() {
         return busService.getAllBuses();
