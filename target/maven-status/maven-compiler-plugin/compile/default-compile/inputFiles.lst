@@ -1,0 +1,8 @@
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/TravelarkApplication.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/model/Bus.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/model/Passenger.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/service/PassengerService.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/controller/TransportController.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/service/BusService.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/repository/PassengerRepository.java
+/home/yogeshpdy/IdeaProjects/travelark/src/main/java/com/magdemy/travelark/repository/BusRepository.java
