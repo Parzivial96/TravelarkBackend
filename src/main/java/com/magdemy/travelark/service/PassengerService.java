@@ -30,4 +30,8 @@ public class PassengerService {
         }
         return passengerList;
     }
+
+    public Passenger getPassengerByRFID(String rfid){
+        return passengerRepository.findByRfid(rfid);
+    }
 }

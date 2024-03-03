@@ -21,4 +21,16 @@ public class BusService {
     public Bus addBus(Bus bus) {
         return busRepository.save(bus);
     }
+
+    public void boardPassenger(String busName,Passenger passenger){
+        System.out.println(busName);
+        Bus bus = busRepository.findByName(busName);
+        if(bus.getPassengerIds().contains(passenger.getId())){
+            bus.getPassengerIds().remove(passenger.getId());
+        }
+        else{
+            bus.getPassengerIds().add(passenger.getId());
+        }
+        busRepository.save(bus);
+    }
 }

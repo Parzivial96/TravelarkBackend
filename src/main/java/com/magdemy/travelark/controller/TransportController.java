@@ -54,5 +54,11 @@ public class TransportController {
     public Passenger addPassenger(@RequestBody Passenger passenger) {
         return passengerService.addPassenger(passenger);
     }
+
+    @PutMapping("/boardPassenger")
+    public void boardPassenger(@RequestBody List<String> data){
+        Passenger passenger = passengerService.getPassengerByRFID(data.get(1));
+        busService.boardPassenger(data.get(0),passenger);
+    }
 }
 
