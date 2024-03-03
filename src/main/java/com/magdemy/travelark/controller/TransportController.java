@@ -55,10 +55,18 @@ public class TransportController {
         return passengerService.addPassenger(passenger);
     }
 
+    /*
     @PutMapping("/boardPassenger")
     public void boardPassenger(@RequestBody List<String> data){
         Passenger passenger = passengerService.getPassengerByRFID(data.get(1));
         busService.boardPassenger(data.get(0),passenger);
+    }
+    */
+
+    @GetMapping("/boardPassenger")
+    public void boardPassenger(@RequestParam String busName, @RequestParam String rfid) {
+        Passenger passenger = passengerService.getPassengerByRFID(rfid);
+        busService.boardPassenger(busName,passenger);
     }
 }
 
