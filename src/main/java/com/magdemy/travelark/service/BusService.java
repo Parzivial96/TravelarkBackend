@@ -22,15 +22,18 @@ public class BusService {
         return busRepository.save(bus);
     }
 
-    public void boardPassenger(String busName,Passenger passenger){
+    public String boardPassenger(String busName,Passenger passenger){
         System.out.println(busName);
         Bus bus = busRepository.findByName(busName);
         if(bus.getPassengerIds().contains(passenger.getId())){
             bus.getPassengerIds().remove(passenger.getId());
+            busRepository.save(bus);
+            return "Dropped";
         }
         else{
             bus.getPassengerIds().add(passenger.getId());
+            busRepository.save(bus);
+            return "Boarded";
         }
-        busRepository.save(bus);
     }
 }
