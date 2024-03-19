@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -72,8 +73,12 @@ public class TransportController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody List<String> loginData){
-        List<String> response = passengerService.login(loginData.get(0),loginData.get(1));
+    public String login(@RequestBody Map<String, String> request){
+        String phone = request.get("phone");
+        String password = request.get("password");
+        System.out.println(phone+" "+password);
+        List<String> response = passengerService.login(phone,password);
+        System.out.println(response);
         return response.get(0).equals("Valid")?response.get(1):"Invalid";
     }
 }
