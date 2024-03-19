@@ -36,16 +36,11 @@ public class PassengerService {
     }
 
     public Passenger getPassengerByPhone(String phone) { return passengerRepository.findByPhone(phone); }
-    public List<String> login(String phone,String password){
+    public Passenger login(String phone,String password){
         Passenger passenger = getPassengerByPhone(phone);
-        List<String> response = new ArrayList<String>();
         if(passenger != null && password.equals(passenger.getPassword())){
-            response.add("Valid");
-            response.add(passenger.getRole());
+            return passenger;
         }
-        else{
-            response.add("Invalid");
-        }
-        return response;
+        return null;
     }
 }

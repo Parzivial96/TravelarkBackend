@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.magdemy.travelark.TravelarkApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.84 s -- in com.magdemy.travelark.TravelarkApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.70 s -- in com.magdemy.travelark.TravelarkApplicationTests

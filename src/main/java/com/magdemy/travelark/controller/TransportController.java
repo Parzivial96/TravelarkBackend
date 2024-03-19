@@ -73,13 +73,11 @@ public class TransportController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> request){
+    public Passenger login(@RequestBody Map<String, String> request){
         String phone = request.get("phone");
         String password = request.get("password");
         System.out.println(phone+" "+password);
-        List<String> response = passengerService.login(phone,password);
-        System.out.println(response);
-        return response.get(0).equals("Valid")?response.get(1):"Invalid";
+        return passengerService.login(phone,password);
     }
 }
 
