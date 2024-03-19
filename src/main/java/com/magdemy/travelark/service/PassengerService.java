@@ -39,7 +39,7 @@ public class PassengerService {
     public List<String> login(String phone,String password){
         Passenger passenger = getPassengerByPhone(phone);
         List<String> response = new ArrayList<String>();
-        if(passenger.getPassword()==password){
+        if(passenger.getPassword().equals(password)){
             response.add("Valid");
             response.add(passenger.getRole());
         }
