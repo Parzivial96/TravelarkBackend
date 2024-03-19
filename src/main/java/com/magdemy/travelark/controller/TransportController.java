@@ -7,7 +7,6 @@ import com.magdemy.travelark.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +23,14 @@ public class TransportController {
 
     @GetMapping("/")
     public String apiOverview(){
-        return "Available End Points:\n" +
-                "\\getAllBus\n" +
-                "\\getAllPassenger\n" +
-                "\\getPassengerById\n" +
-                "\\addBus\n" +
-                "\\addPassenger";
+        return """
+                Available End Points:
+                \\getAllBus
+                \\getAllPassenger
+                \\getPassengerById
+                \\addBus
+                \\addPassenger
+                """;
     }
 
     @GetMapping("/getAllBus")
@@ -65,9 +66,15 @@ public class TransportController {
     */
 
     @GetMapping("/boardPassenger")
-    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid) {
+    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude) {
         Passenger passenger = passengerService.getPassengerByRFID(rfid);
-        return busService.boardPassenger(busName,passenger);
+        return busService.boardPassenger(busName,passenger,latitude,longitude);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody List<String> loginData){
+        List<String> response = passengerService.login(loginData.get(0),loginData.get(1));
+        return response.get(0).equals("Valid")?response.get(1):"Invalid";
     }
 }
 

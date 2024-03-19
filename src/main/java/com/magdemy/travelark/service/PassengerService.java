@@ -34,4 +34,18 @@ public class PassengerService {
     public Passenger getPassengerByRFID(String rfid){
         return passengerRepository.findByRfid(rfid);
     }
+
+    public Passenger getPassengerByPhone(String phone) { return passengerRepository.findByPhone(phone); }
+    public List<String> login(String phone,String password){
+        Passenger passenger = getPassengerByPhone(phone);
+        List<String> response = new ArrayList<String>();
+        if(passenger.getPassword()==password){
+            response.add("Valid");
+            response.add(passenger.getRole());
+        }
+        else{
+            response.add("Invalid");
+        }
+        return response;
+    }
 }
