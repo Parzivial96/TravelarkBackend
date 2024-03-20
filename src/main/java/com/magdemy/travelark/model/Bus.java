@@ -12,12 +12,12 @@ public class Bus {
 
     private String name;
     private List<Double> location;
-    private List<String> passengerIds;
+    private List<HistoryEntry> history;
 
-    public Bus(String name, List<Double> location, List<String> passengerIds) {
+    public Bus(String name, List<Double> location, List<HistoryEntry> history) {
         this.name = name;
         this.location = location;
-        this.passengerIds = passengerIds;
+        this.history = history;
     }
 
     public String getId() {
@@ -44,12 +44,12 @@ public class Bus {
         this.location = location;
     }
 
-    public List<String> getPassengerIds() {
-        return passengerIds;
+    public List<HistoryEntry> getHistory() {
+        return history;
     }
 
-    public void setPassengerIds(List<String> passengerIds) {
-        this.passengerIds = passengerIds;
+    public void setHistory(List<HistoryEntry> history) {
+        this.history = history;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Bus {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", location=" + location +
-                ", passengerIds=" + passengerIds +
+                ", history=" + history +
                 '}';
     }
 }

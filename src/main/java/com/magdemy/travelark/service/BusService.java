@@ -30,14 +30,14 @@ public class BusService {
         LocalDate currentDate = LocalDate.now();
         LocalTime currentTime = LocalTime.now();
         Bus bus = busRepository.findByName(busName);
-        if(bus.getPassengerIds().contains(passenger.getId())){
-            bus.getPassengerIds().remove(passenger.getId());
+        if(bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().contains(passenger.getId())){
+            bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().remove(passenger.getId());
             passenger.getHistory().get(passenger.getHistory().size()-1).add(currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
             busRepository.save(bus);
             return "Dropped";
         }
         else{
-            bus.getPassengerIds().add(passenger.getId());
+            bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().add(passenger.getId());
             passenger.getHistory().add(List.of(currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),latitude,longitude,currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
             busRepository.save(bus);
             return "Boarded";
