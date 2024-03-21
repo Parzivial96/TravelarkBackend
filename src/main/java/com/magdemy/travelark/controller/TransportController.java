@@ -79,5 +79,16 @@ public class TransportController {
         System.out.println(phone+" "+password);
         return passengerService.login(phone,password);
     }
+
+    @PostMapping("/updateLocation")
+    public String updateLocation(@RequestBody Map<String, String> request){
+        String busName = request.get("busname");
+        String latitude = request.get("latitude");
+        String longitude = request.get("longitude");
+        String altitude = request.get("altitude");
+        String date = request.get("date");
+        String time = request.get("time");
+        return busService.updateLocation(busName, latitude, longitude, altitude, date, time);
+    }
 }
 
