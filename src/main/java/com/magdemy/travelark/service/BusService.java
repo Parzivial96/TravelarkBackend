@@ -34,6 +34,7 @@ public class BusService {
         location.add(Double.valueOf(altitude));
         try {
             bus.setLocation(location);
+            busRepository.save(bus);
             return "Updated";
         }
         catch (Exception e){
