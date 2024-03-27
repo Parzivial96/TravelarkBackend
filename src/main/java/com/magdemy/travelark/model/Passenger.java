@@ -15,7 +15,7 @@ public class Passenger {
     private String password;
     private String rfid;
     private  String role;
-    private List<List<String>> history = new ArrayList<>();
+    private List<PassengerHistoryEntry> history = new ArrayList<>();
 
     public Passenger(String name, String phone, String password, String rfid, String role) {
         this.name = name;
@@ -23,6 +23,7 @@ public class Passenger {
         this.password = password;
         this.rfid = rfid;
         this.role = role;
+        this.history = new ArrayList<>();
     }
 
     public String getId() {
@@ -73,11 +74,11 @@ public class Passenger {
         this.role = role;
     }
 
-    public List<List<String>> getHistory() {
+    public List<PassengerHistoryEntry> getHistory() {
         return history;
     }
 
-    public void setHistory(List<List<String>> history) {
+    public void setHistory(List<PassengerHistoryEntry> history) {
         this.history = history;
     }
 

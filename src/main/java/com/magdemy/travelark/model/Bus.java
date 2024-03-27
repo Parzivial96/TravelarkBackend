@@ -12,9 +12,9 @@ public class Bus {
 
     private String name;
     private List<Double> location;
-    private List<HistoryEntry> history;
+    private List<BusHistoryEntry> history;
 
-    public Bus(String name, List<Double> location, List<HistoryEntry> history) {
+    public Bus(String name, List<Double> location, List<BusHistoryEntry> history) {
         this.name = name;
         this.location = location;
         this.history = history;
@@ -44,11 +44,11 @@ public class Bus {
         this.location = location;
     }
 
-    public List<HistoryEntry> getHistory() {
+    public List<BusHistoryEntry> getHistory() {
         return history;
     }
 
-    public void setHistory(List<HistoryEntry> history) {
+    public void setHistory(List<BusHistoryEntry> history) {
         this.history = history;
     }
 

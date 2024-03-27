@@ -67,9 +67,9 @@ public class TransportController {
     */
 
     @GetMapping("/boardPassenger")
-    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude) {
+    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude, @RequestParam String date) {
         Passenger passenger = passengerService.getPassengerByRFID(rfid);
-        return busService.boardPassenger(busName,passenger,latitude,longitude);
+        return busService.boardPassenger(busName, passenger, latitude, longitude, date);
     }
 
     @PostMapping("/login")

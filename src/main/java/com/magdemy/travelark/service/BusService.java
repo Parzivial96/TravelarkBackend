@@ -1,22 +1,28 @@
 package com.magdemy.travelark.service;
 
 import com.magdemy.travelark.model.Bus;
+import com.magdemy.travelark.model.BusHistoryEntry;
 import com.magdemy.travelark.model.Passenger;
+import com.magdemy.travelark.model.PassengerHistoryEntry;
 import com.magdemy.travelark.repository.BusRepository;
+import com.magdemy.travelark.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Service
 public class BusService {
 
     @Autowired
     private BusRepository busRepository;
+
+    @Autowired
+    private PassengerRepository passengerRepository;
 
     public List<Bus> getAllBuses() {
         return busRepository.findAll();
@@ -28,7 +34,7 @@ public class BusService {
 
     public String updateLocation(String busName, String latitude, String longitude, String altitude, String date, String time){
         Bus bus = busRepository.findByName(busName);
-        List<Double> location = new ArrayList<Double>();
+        List<Double> location = new ArrayList<>();
         location.add(Double.valueOf(latitude));
         location.add(Double.valueOf(longitude));
         location.add(Double.valueOf(altitude));
@@ -36,28 +42,218 @@ public class BusService {
             bus.setLocation(location);
             busRepository.save(bus);
             return "Updated";
-        }
-        catch (Exception e){
+        } catch (Exception e){
             return e.toString();
         }
     }
 
-    public String boardPassenger(String busName,Passenger passenger,String latitude,String longitude){
-        System.out.println(busName);
-        LocalDate currentDate = LocalDate.now();
+    public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date){
         LocalTime currentTime = LocalTime.now();
         Bus bus = busRepository.findByName(busName);
-        if(bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().contains(passenger.getId())){
-            bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().remove(passenger.getId());
-            passenger.getHistory().get(passenger.getHistory().size()-1).add(currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            busRepository.save(bus);
-            return "Dropped";
+        List<BusHistoryEntry> busHistoryEntries = bus.getHistory();
+        boolean busHistroyFlag = false;
+
+        for (BusHistoryEntry busHistoryEntry : busHistoryEntries) {
+            if (busHistoryEntry.getDate().equals(date)) {
+                if(passenger.getRole().equals("Driver")){
+                    if(busHistoryEntry.getDriverId()==null){
+                        busHistoryEntry.setDriverId(passenger.getId());
+                        busHistoryEntry.setDriverName(passenger.getName());
+                        bus.setHistory(busHistoryEntries);
+                        busRepository.save(bus);
+                        initialPassenger(passenger, latitude, longitude, date, currentTime);
+                        return "Boarded";
+                    }
+                    else{
+                        setDropTime(passenger, date, currentTime);
+                    }
+                }
+                else {
+                    if(!busHistoryEntry.getPassengerIds().contains(passenger.getId())){
+                        busHistoryEntry.getPassengerIds().add(passenger.getId());
+                        bus.setHistory(busHistoryEntries);
+                        busRepository.save(bus);
+                        initialPassenger(passenger, latitude, longitude, date, currentTime);
+                        return "Boarded";
+                    }
+                    else {
+                        setDropTime(passenger, date, currentTime);
+                    }
+                }
+                busHistroyFlag = true;
+                break;
+            }
         }
-        else{
-            bus.getHistory().get(bus.getHistory().size()-1).getPassengerIds().add(passenger.getId());
-            passenger.getHistory().add(List.of(currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),latitude,longitude,currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+
+        if(!busHistroyFlag){
+            BusHistoryEntry newBusHistory = new BusHistoryEntry();
+            newBusHistory.setDate(date);
+            if(passenger.getRole().equals("Driver")){
+                newBusHistory.setDriverId(passenger.getId());
+                newBusHistory.setDriverName(passenger.getName());
+            }
+            else {
+                newBusHistory.setPassengerIds(List.of(passenger.getId()));
+            }
+            bus.getHistory().add(newBusHistory);
             busRepository.save(bus);
+            initialPassenger(passenger, latitude, longitude, date, currentTime);
             return "Boarded";
         }
+        return "Dropped";
     }
+
+    public void initialPassenger(Passenger passenger, String latitude, String longitude, String currentDate, LocalTime currentTime){
+        PassengerHistoryEntry newPassengerHistory = new PassengerHistoryEntry();
+        newPassengerHistory.setDate(currentDate);
+        newPassengerHistory.setLongitude(longitude);
+        newPassengerHistory.setLatitude(latitude);
+        newPassengerHistory.setIntime(String.valueOf(currentTime));
+        passenger.getHistory().add(newPassengerHistory);
+        passengerRepository.save(passenger);
+    }
+
+    public void setDropTime(Passenger passenger, String date, LocalTime currentTime){
+        List<PassengerHistoryEntry> passengerHistoryEntries = passenger.getHistory();
+        for(PassengerHistoryEntry passengerHistoryEntry: passengerHistoryEntries){
+            if(passengerHistoryEntry.getDate().equals(date)){
+                passengerHistoryEntry.setDroptime(String.valueOf(currentTime));
+                break;
+            }
+        }
+        passenger.setHistory(passengerHistoryEntries);
+        passengerRepository.save(passenger);
+    }
+
+    /*
+    public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date){
+        LocalTime currentTime = LocalTime.now();
+        Bus bus = busRepository.findByName(busName);
+        List<BusHistoryEntry> busHistoryEntries = bus.getHistory();
+        List<PassengerHistoryEntry> passengerHistoryEntries = passenger.getHistory();
+        boolean passengerFound = false;
+
+        for (BusHistoryEntry busHistoryEntry : busHistoryEntries) {
+            if (busHistoryEntry.getDate().equals(date)) {
+                if(passenger.getRole().equals("Driver")){
+                    if(busHistoryEntry.getDriverId()==null){
+                        busHistoryEntry.setDriverId(passenger.getId());
+                        busHistoryEntry.setDriverName(passenger.getName());
+                        busRepository.save(bus);
+                        return "Driver Boarded";
+                    }
+                }
+                else {
+                    if(!busHistoryEntry.getPassengerIds().contains(passenger.getId())){
+                        busHistoryEntry.getPassengerIds().add(passenger.getId());
+                        busRepository.save(bus);
+                        PassengerHistoryEntry newPassengerHistoryEntry = new PassengerHistoryEntry();
+                        newPassengerHistoryEntry.setDate(date);
+                        newPassengerHistoryEntry.setIntime(String.valueOf(currentTime));
+                        newPassengerHistoryEntry.setLatitude(latitude);
+                        newPassengerHistoryEntry.setLongitude(longitude);
+                        passenger.getHistory().add(newPassengerHistoryEntry);
+                        passengerRepository.save(passenger);
+                        return "Passenger Boarded";
+                    }
+                }
+                for(PassengerHistoryEntry passengerHistoryEntry : passengerHistoryEntries){
+                    if(passengerHistoryEntry.getDate().equals(date)){
+                        passengerHistoryEntry.setDroptime(String.valueOf(currentTime));
+                    }
+                }
+                passengerRepository.save(passenger);
+                passengerFound = true;
+                break;
+            }
+        }
+        if (!passengerFound) {
+            BusHistoryEntry newBusHistoryEntity = new BusHistoryEntry();
+            newBusHistoryEntity.setDate(date);
+            if(passenger.getRole().equals("Driver")) {
+                newBusHistoryEntity.setDriverId(passenger.getId());
+                newBusHistoryEntity.setDriverName(passenger.getName());
+            }
+            else {
+                if(newBusHistoryEntity.getPassengerIds()==null) {
+                    newBusHistoryEntity.setPassengerIds(new ArrayList<>());
+                }
+                newBusHistoryEntity.getPassengerIds().add(passenger.getId());
+            }
+            busHistoryEntries.add(newBusHistoryEntity);
+            busRepository.save(bus);
+            PassengerHistoryEntry newPassengerHistoryEntry = new PassengerHistoryEntry();
+            newPassengerHistoryEntry.setDate(date);
+            newPassengerHistoryEntry.setIntime(String.valueOf(currentTime));
+            newPassengerHistoryEntry.setLatitude(latitude);
+            newPassengerHistoryEntry.setLongitude(longitude);
+            passenger.getHistory().add(newPassengerHistoryEntry);
+            passengerRepository.save(passenger);
+            return "Boarded";
+        }
+        return "Dropped";
+    }
+    */
+
+    /*public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date) {
+        LocalDate currentDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Bus bus = busRepository.findByName(busName);
+        List<BusHistoryEntry> busHistoryEntries = bus.getHistory();
+        boolean passengerFound = false;
+
+        if (passenger.getRole().equals("Driver")) {
+            for (BusHistoryEntry historyEntry : busHistoryEntries) {
+                if (historyEntry.getDate().equals(date)) {
+                    //if the role is driver and the history in bus data is found
+                    passengerFound = true;
+                    break;
+                }
+            }
+            //if the role is driver and the history in bus data is not found
+            if (!passengerFound) {
+                BusHistoryEntry newHistoryEntry = new BusHistoryEntry();
+                newHistoryEntry.setDate(date);
+                newHistoryEntry.setDriverId(passenger.getId());
+                newHistoryEntry.setDriverName(passenger.getName());
+                newHistoryEntry.setPassengerIds(new ArrayList<>());
+                busHistoryEntries.add(newHistoryEntry);
+                busRepository.save(bus);
+                return "New history entry created for driver.";
+            }
+        } else {
+            for (BusHistoryEntry historyEntry : busHistoryEntries) {
+                if (historyEntry.getDate().equals(date)) {
+                    //if the user is passenger or driver and history found
+                    passengerFound = true;
+                    break;
+                }
+            }
+            //if the user is passenger or driver and history not found
+            if (!passengerFound) {
+                BusHistoryEntry newHistoryEntry = new BusHistoryEntry();
+                newHistoryEntry.setDate(date);
+                newHistoryEntry.setPassengerIds(new ArrayList<>());
+                newHistoryEntry.getPassengerIds().add(passenger.getId());
+                newHistoryEntry.setPassengerHistoryEntries(new ArrayList<>());
+                newHistoryEntry.getPassengerHistoryEntries().add(new PassengerHistoryEntry(date, latitude, longitude, LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")), ""));
+                busHistoryEntries.add(newHistoryEntry);
+                busRepository.save(bus);
+                return "New history entry created for passenger.";
+            }
+        }
+
+        return "Passenger history updated.";
+    }
+
+    private void updatePassengerHistory(BusHistoryEntry historyEntry, String passengerId, String latitude, String longitude) {
+        List<PassengerHistoryEntry> passengerHistoryEntries = historyEntry.getPassengerHistoryEntries();
+        for (PassengerHistoryEntry passengerHistoryEntry : passengerHistoryEntries) {
+            if (passengerHistoryEntry.getDate().equals(LocalDate.now().toString())) {
+                passengerHistoryEntry.setDroptime(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+                return;
+            }
+        }
+        passengerHistoryEntries.add(new PassengerHistoryEntry(LocalDate.now().toString(), latitude, longitude, LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")), ""));
+        historyEntry.getPassengerIds().add(passengerId);
+    }*/
 }
