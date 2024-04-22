@@ -6,13 +6,17 @@ public class PassengerHistoryEntry {
     private String longitude;
     private String intime;
     private String droptime;
+    private String dropLatitude;
+    private  String dropLongitude;
 
-    public PassengerHistoryEntry(String date, String latitude, String longitude, String intime, String droptime) {
+    public PassengerHistoryEntry(String date, String latitude, String longitude, String intime, String droptime, String dropLatitude, String dropLongitude) {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
         this.intime = intime;
         this.droptime = droptime;
+        this.dropLatitude = dropLatitude;
+        this.dropLongitude = dropLongitude;
     }
 
     public PassengerHistoryEntry() {
@@ -39,6 +43,15 @@ public class PassengerHistoryEntry {
         return droptime;
     }
 
+
+    public String getDropLatitude() {
+        return dropLatitude;
+    }
+
+    public String getDropLongitude() {
+        return dropLongitude;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -59,6 +72,14 @@ public class PassengerHistoryEntry {
         this.droptime = droptime;
     }
 
+    public void setDropLatitude(String dropLatitude) {
+        this.dropLatitude = dropLatitude;
+    }
+
+    public void setDropLongitude(String dropLongitude) {
+        this.dropLongitude = dropLongitude;
+    }
+
     @Override
     public String toString() {
         return "PassengerHistoryEntry{" +
@@ -67,6 +88,8 @@ public class PassengerHistoryEntry {
                 ", longitude='" + longitude + '\'' +
                 ", intime='" + intime + '\'' +
                 ", droptime='" + droptime + '\'' +
+                ", dropLatitude='" + dropLatitude + '\'' +
+                ", dropLongitude='" + dropLongitude + '\'' +
                 '}';
     }
 }

@@ -65,7 +65,7 @@ public class BusService {
                         return "Boarded";
                     }
                     else{
-                        setDropTime(passenger, date, currentTime);
+                        setDropTime(passenger, date, currentTime, latitude, longitude);
                     }
                 }
                 else {
@@ -77,7 +77,7 @@ public class BusService {
                         return "Boarded";
                     }
                     else {
-                        setDropTime(passenger, date, currentTime);
+                        setDropTime(passenger, date, currentTime, latitude, longitude);
                     }
                 }
                 busHistroyFlag = true;
@@ -113,11 +113,13 @@ public class BusService {
         passengerRepository.save(passenger);
     }
 
-    public void setDropTime(Passenger passenger, String date, LocalTime currentTime){
+    public void setDropTime(Passenger passenger, String date, LocalTime currentTime, String latitude, String longitude){
         List<PassengerHistoryEntry> passengerHistoryEntries = passenger.getHistory();
         for(PassengerHistoryEntry passengerHistoryEntry: passengerHistoryEntries){
             if(passengerHistoryEntry.getDate().equals(date)){
                 passengerHistoryEntry.setDroptime(String.valueOf(currentTime));
+                passengerHistoryEntry.setDropLatitude(latitude);
+                passengerHistoryEntry.setDropLongitude(longitude);
                 break;
             }
         }
