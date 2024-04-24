@@ -90,5 +90,10 @@ public class TransportController {
         String time = request.get("time");
         return busService.updateLocation(busName, latitude, longitude, altitude, date, time);
     }
+
+    @GetMapping("/getBusLocation")
+    public String getBusLocation(@RequestParam String busName){
+        return busService.getBusLocation(busName);
+    }
 }
 

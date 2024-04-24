@@ -127,6 +127,11 @@ public class BusService {
         passengerRepository.save(passenger);
     }
 
+    public String getBusLocation(String busName){
+        Bus bus = busRepository.findByName(busName);
+        return Double.toString(bus.getLocation().get(0))+","+Double.toString(bus.getLocation().get(1));
+    }
+
     /*
     public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date){
         LocalTime currentTime = LocalTime.now();
