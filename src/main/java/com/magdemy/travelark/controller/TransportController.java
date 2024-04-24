@@ -7,6 +7,8 @@ import com.magdemy.travelark.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,8 +69,17 @@ public class TransportController {
     */
 
     @GetMapping("/boardPassenger")
-    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude, @RequestParam String date) {
+    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude) {
         Passenger passenger = passengerService.getPassengerByRFID(rfid);
+        // Create a LocalDate object
+        LocalDate currentDate = LocalDate.now();
+
+        // Define the date format you want
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // Format the LocalDate
+        String date = currentDate.format(formatter);
+
         return busService.boardPassenger(busName, passenger, latitude, longitude, date);
     }
 
