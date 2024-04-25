@@ -9,9 +9,9 @@ import com.magdemy.travelark.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,12 @@ public class BusService {
     }
 
     public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date){
-        LocalTime currentTime = LocalTime.now();
+        // Get the current time in the Kolkata time zone
+        LocalTime currentTimeInKolkata = LocalTime.now(ZoneId.of("Asia/Kolkata"));
+
+        // Format the time as a string (HH:mm:ss format)
+        String currentTime = currentTimeInKolkata.toString(); // This will format the time as HH:mm:ss
+
         Bus bus = busRepository.findByName(busName);
         List<BusHistoryEntry> busHistoryEntries = bus.getHistory();
         boolean busHistroyFlag = false;
@@ -103,21 +108,21 @@ public class BusService {
         return "Dropped";
     }
 
-    public void initialPassenger(Passenger passenger, String latitude, String longitude, String currentDate, LocalTime currentTime){
+    public void initialPassenger(Passenger passenger, String latitude, String longitude, String currentDate, String currentTime){
         PassengerHistoryEntry newPassengerHistory = new PassengerHistoryEntry();
         newPassengerHistory.setDate(currentDate);
         newPassengerHistory.setLongitude(longitude);
         newPassengerHistory.setLatitude(latitude);
-        newPassengerHistory.setIntime(String.valueOf(currentTime));
+        newPassengerHistory.setIntime(currentTime);
         passenger.getHistory().add(newPassengerHistory);
         passengerRepository.save(passenger);
     }
 
-    public void setDropTime(Passenger passenger, String date, LocalTime currentTime, String latitude, String longitude){
+    public void setDropTime(Passenger passenger, String date, String currentTime, String latitude, String longitude){
         List<PassengerHistoryEntry> passengerHistoryEntries = passenger.getHistory();
         for(PassengerHistoryEntry passengerHistoryEntry: passengerHistoryEntries){
             if(passengerHistoryEntry.getDate().equals(date)){
-                passengerHistoryEntry.setDroptime(String.valueOf(currentTime));
+                passengerHistoryEntry.setDroptime(currentTime);
                 passengerHistoryEntry.setDropLatitude(latitude);
                 passengerHistoryEntry.setDropLongitude(longitude);
                 break;
