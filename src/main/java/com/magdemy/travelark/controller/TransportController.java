@@ -69,7 +69,7 @@ public class TransportController {
     */
 
     @GetMapping("/boardPassenger")
-    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid, @RequestParam String latitude, @RequestParam String longitude) {
+    public String boardPassenger(@RequestParam String busName, @RequestParam String rfid) {
         Passenger passenger = passengerService.getPassengerByRFID(rfid);
         // Create a LocalDate object
         LocalDate currentDate = LocalDate.now();
@@ -80,7 +80,7 @@ public class TransportController {
         // Format the LocalDate
         String date = currentDate.format(formatter);
 
-        return busService.boardPassenger(busName, passenger, latitude, longitude, date);
+        return busService.boardPassenger(busName, passenger, date);
     }
 
     @PostMapping("/login")

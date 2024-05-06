@@ -47,7 +47,7 @@ public class BusService {
         }
     }
 
-    public String boardPassenger(String busName, Passenger passenger, String latitude, String longitude, String date){
+    public String boardPassenger(String busName, Passenger passenger, String date){
         // Get the current time in the Kolkata time zone
         LocalTime currentTimeInKolkata = LocalTime.now(ZoneId.of("Asia/Kolkata"));
 
@@ -56,6 +56,10 @@ public class BusService {
 
         Bus bus = busRepository.findByName(busName);
         List<BusHistoryEntry> busHistoryEntries = bus.getHistory();
+
+        String latitude = bus.getLocation().get(0).toString();
+        String longitude = bus.getLocation().get(1).toString();
+
         boolean busHistroyFlag = false;
 
         for (BusHistoryEntry busHistoryEntry : busHistoryEntries) {
