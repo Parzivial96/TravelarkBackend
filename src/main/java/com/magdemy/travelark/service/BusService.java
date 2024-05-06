@@ -64,6 +64,7 @@ public class BusService {
                     if(busHistoryEntry.getDriverId()==null){
                         busHistoryEntry.setDriverId(passenger.getId());
                         busHistoryEntry.setDriverName(passenger.getName());
+                        busHistoryEntry.setPassengerIds(new ArrayList<String>());
                         bus.setHistory(busHistoryEntries);
                         busRepository.save(bus);
                         initialPassenger(passenger, latitude, longitude, date, currentTime);
