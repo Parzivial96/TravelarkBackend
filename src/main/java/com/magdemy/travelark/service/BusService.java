@@ -72,7 +72,7 @@ public class BusService {
                         bus.setHistory(busHistoryEntries);
                         busRepository.save(bus);
                         initialPassenger(passenger, latitude, longitude, date, currentTime);
-                        return "Boarded";
+                        return "Boarded Successfully";
                     }
                     else{
                         setDropTime(passenger, date, currentTime, latitude, longitude);
@@ -84,7 +84,7 @@ public class BusService {
                         bus.setHistory(busHistoryEntries);
                         busRepository.save(bus);
                         initialPassenger(passenger, latitude, longitude, date, currentTime);
-                        return "Boarded";
+                        return "Boarded Successfully";
                     }
                     else {
                         setDropTime(passenger, date, currentTime, latitude, longitude);
@@ -108,9 +108,9 @@ public class BusService {
             bus.getHistory().add(newBusHistory);
             busRepository.save(bus);
             initialPassenger(passenger, latitude, longitude, date, currentTime);
-            return "Boarded";
+            return "Boarded Successfully";
         }
-        return "Dropped";
+        return "Dropped Successfully";
     }
 
     public void initialPassenger(Passenger passenger, String latitude, String longitude, String currentDate, String currentTime){
